@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="userDataErrorHandler" doc:id="fa10ff23-7c70-4f1c-9797-14fd89e653c0">
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="020ed389-a8d1-4f10-9496-e822e07ccee5" type="APP:BAD_REQUEST">
+			<logger level="ERROR" message="Error occurred: #[error.errorType]" doc:name="Log Bad Request"/>
+				<ee:transform doc:name="set bad request response" doc:id="c792ca4b-60f4-4a67-8839-28d4e7601fd7" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+  { 
+	"status": "fail", 
+	"errorCode": 400, 
+	"message": "Bad Request"
+  }]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			
+</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9ab25796-dfd6-4e5b-bcaa-6ea11d259980" type="APP:SERVICE_UNAVAILABLE">
+				<logger level="ERROR" doc:name="Log Service Unavailable" doc:id="fe62d3e1-a713-49bb-acda-e3a51fab785a" message="Error occurred: #[error.errorType]"/>
+				<ee:transform doc:name="set service unavailable response" doc:id="8829feb3-cbca-451c-a067-301efcf8c9d6" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+  {
+    "status": "fail",
+    "errorCode": 503,
+    "errorType": "Service Unavailable"
+  }]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			
+</on-error-propagate>
+		</error-handler>
+</mule>

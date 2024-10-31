@@ -1,0 +1,10 @@
+{
+    "runtimeVersion": "4.8.0",
+    "apiDiscovery": {
+        "enabled": true,
+        "apiId": "20043296"
+    },
+    "minMuleVersion": "4.1.0",
+    "secure": false,
+    "javaSpecificationVersions": ["17"]
+}

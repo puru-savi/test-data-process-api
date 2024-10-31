@@ -1,0 +1,35 @@
+#%RAML 1.0
+title: test-data-process-api
+version: 1.0.0
+baseUri: https://e077bbf0eebb41f5a34999a39ead8d05.api.mockbin.io/
+
+types:
+  UserDataType: !include /dataTypes/UserDataType.raml
+  SuccessExample: !include /examples/SuccessExample.raml
+  BadRequestExample: !include /examples/BadRequestExample.raml 
+  ServiceUnavailableExample: !include /examples/ServiceUnavailableExample.raml
+    
+/processData:
+  displayName: Process user data
+  description: API to process given user data
+  post:
+    body:
+      application/json:
+        type: UserDataType
+    responses:
+      200:
+        body:
+          application/json:
+            type: SuccessExample
+
+      400:
+        body:
+          application/json:
+            type: BadRequestExample
+
+      503:
+        body:
+          application/json:
+            type: ServiceUnavailableExample
+              
+              

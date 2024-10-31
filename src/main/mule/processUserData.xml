@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="f23fdb5a-420b-4498-ba9d-5f39aaa8982b">
+		<http:request-connection host="${thirdparty.app.url}" protocol="HTTPS"/>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="668c8d9a-c30f-4a69-b9d7-1bef9c29240a" file="application.properties" />
+	<flow name="processUserDataFlow" doc:id="e37aa746-8023-451d-bbc9-1415be3902bd" >
+		<logger level="INFO" doc:name="User data" doc:id="4cab50f1-9066-4afd-9a5a-49f384c59014" message='User data is #[payload]'/>
+		<ee:transform doc:name="Process user data" doc:id="01f5aa5c-d5e1-4651-8710-2fc3b543f085" >
+			<ee:message >
+				<ee:set-payload resource="process_data.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Request body" doc:id="61d63709-9959-4d4d-8326-1f53cb25a9fa" message='Request JSON is #[payload]'/>
+		<http:request method="POST" doc:name="call Mock API" doc:id="770c1877-47e5-475b-9645-3e026bd3cf4e" config-ref="HTTP_Request_configuration" path="/">
+			<error-mapping sourceType="HTTP:BAD_REQUEST" targetType="APP:BAD_REQUEST"/>
+			<error-mapping sourceType="HTTP:SERVICE_UNAVAILABLE" targetType="APP:SERVICE_UNAVAILABLE" />
+		</http:request>
+		<logger level="INFO" doc:name="Response from server" doc:id="3353e892-8f42-4421-add3-a6c6d6381f1a" message="Response from server is #[payload]"/>
+		<error-handler ref="userDataErrorHandler" />	
+	</flow>
+</mule>
