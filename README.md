@@ -16,6 +16,7 @@ The Test Data Process API is a MuleSoft application designed to process user dat
 - Mule Runtime (version 4.8.0)
 - Anypoint platform and account
 - PostMan
+- Mockbin
 - Basic knowledge of RESTful APIs and MuleSoft concepts
 
 # Installation
@@ -41,6 +42,7 @@ The Test Data Process API is a MuleSoft application designed to process user dat
   
 # Testing
 
+**Success Scenario**
    - Open Postman and put below details
       - URL for local: http://localhost:8081/api/processData
       - URL for cloudHub: check your cloudhub url of deployed application and use it here
@@ -53,9 +55,28 @@ The Test Data Process API is a MuleSoft application designed to process user dat
    - Click on Send button
    - Validate the response from server
 
+**Bad Request Scenario**
+   - Open processUserData.xml file
+   - Change HTTP request Host url as ${thirdparty.badrequest.url}
+   - Run the application again as instructed above
+   - Call the API using postman and validate the response
+
+**Service Unavailable Scenario**
+   - Open processUserData.xml file
+   - Change HTTP request Host url as ${thirdparty.unavailable.url}
+   - Run the application again as instructed above
+   - Call the API using postman and validate the response
+
 # Error Handling
 
 The API return standarized error response in case of failures. Error response includes
 
 - **ErrorCode 400**: In case of bad request
 - **ErrorCode 503**: In case of service not available
+
+# Mocking
+
+We used Mockbin to mock third party server response.
+- URL For success response: https://e077bbf0eebb41f5a34999a39ead8d05.api.mockbin.io/
+- URL for Bad Request: https://f6e77b2a80014372944254f5b33eb49f.api.mockbin.io/
+- URL for Service Unavailable: https://413979d9637f443fa213325934d93392.api.mockbin.io/
